@@ -504,7 +504,8 @@ preconditions:
   (Witness is alive)
   (Murderer is the culprit)
   (Detective knows Evidence is the murder weapon)
-  (Witness saw Murderer with the Evidence)/(Detective learns about Action which is related to Murderer and could be a motive)
+  (Witness saw Murderer with the Evidence)
+  (Detective learns about Action which is related to Murderer and could be a motive)
   !(Detective knows about Murderer moving the Evidence)
   !(Victim is alive)
 effects:
@@ -559,9 +560,9 @@ preconditions:
   #!(Detective is at the Location)
   (Detective knows Evidence is the murder weapon)
   (Detective knows about Suspect moving the Evidence)/(Detective learns about Action which is related to Suspect and could be a motive)
-  !(Detective suspects that Suspect murdered Victim with Evidence)
+  !(Detective suspects that Suspect is the murderer)
 effects:
-  (Detective suspects that Suspect murdered Victim with Evidence)
+  (Detective suspects that Suspect is the murderer)
 #responses:
   #Pursue(Detective=Detective,Suspect=Suspect,Victim=Victim,Evidence=Evidence,Origin=Origin,Location=Location,Action=Action)
 
@@ -570,7 +571,7 @@ $Pursue
 roles:
   Detective:Character
   Suspect:Character
-  Victim:Character
+  #Victim:Character
   Evidence:Prop
   Origin:Location
   Location:Location
@@ -578,8 +579,9 @@ roles:
 preconditions:
   (Detective is a detective)
   (Suspect is alive)
-  !(Victim is alive)
-  (Detective suspects that Suspect murdered Victim with Evidence) / (Detective learns about Action which is related to Suspect and could be motive)
+  #!(Victim is alive)
+  (Detective suspects that Suspect is the murderer)
+  (Detective learns about Action which is related to Suspect and could be motive)
   (Detective is at the Origin)
   (Suspect is at the Location)
   !(Detective is at the Location)
@@ -588,64 +590,62 @@ effects:
   !(Detective is at the Origin)
   (This is a movement)
 responses:
-  Accuse(Detective=Detective,Suspect=Suspect,Victim=Victim,Evidence=Evidence,Action=Action,Location=Location)
+  Accuse(Detective=Detective,Suspect=Suspect,Location=Location)
   
 $Accuse
-"Detective {Detective} accuses {Suspect} of killing {Victim} with {Evidence}"
+"Detective {Detective} accuses {Suspect} of murder"
 roles:
   Detective:Character
   Suspect:Character
-  Victim:Character
-  Evidence:Prop
-  Action:Action
+  #Victim:Character
+  #Evidence:Prop
+  #Action:Action
   Location:Location
 preconditions:
   (Detective is at the Location)
   (Suspect is at the Location)
   (Detective is a detective)
-  !(Victim is alive)
-  (Detective suspects that Suspect murdered Victim with Evidence)
-  (Detective learns about Action which is related to Suspect and could be motive)
-  !(Detective accuses Suspect of killing Victim with Evidence)
+  #!(Victim is alive)
+  (Detective suspects that Suspect is the murderer)
+  #(Detective learns about Action which is related to Suspect and could be motive)
+  !(Detective accuses Suspect of murder)
 effects:
-  (Detective accuses Suspect of killing Victim with Evidence)
+  (Detective accuses Suspect of murder)
 responses:
-  Confess(Suspect=Suspect,Detective=Detective,Evidence=Evidence,Victim=Victim)
-  FalseAccusation(Suspect=Suspect,Detective=Detective,Evidence=Evidence,Victim=Victim)
+  Confess(Suspect=Suspect,Detective=Detective)
+  FalseAccusation(Suspect=Suspect,Detective=Detective)
 
 $Confess
-"{Suspect} confesses that he is the murderer of {Victim}"
+"{Suspect} confesses that he is the murderer"
 roles:
   Suspect:Character 
   Detective:Character
-  Evidence:Prop
-  Victim:Character
+  #Evidence:Prop
+  #Victim:Character
 preconditions:
   (Detective is a detective)
   (Suspect is the culprit)
-  !(Victim is alive)
-  (Detective accuses Suspect of killing Victim with Evidence)
-  !(Suspect confesses that he is the murderer of Victim)
+  #!(Victim is alive)
+  (Detective accuses Suspect of murder)
+  !(Suspect confesses that he is the murderer)
 effects:
-  (Suspect confesses that he is the murderer of Victim)
+  (Suspect confesses that he is the murderer)
+  !(Detective suspects that Suspect is the murderer)
 
 $FalseAccusation
-"{Suspect} denies that he is the murderer of {Victim}"
+"{Suspect} denies that he is the murderer"
 roles:
   Suspect:Character 
   Detective:Character
-  Evidence:Prop
-  Victim:Character
+  #Evidence:Prop
+  #Victim:Character
 preconditions:
   (Detective is a detective)
   !(Suspect is the culprit)
-  !(Victim is alive)
-  (Detective accuses Suspect of killing Victim with Evidence)
-  !(Suspect denies that he is the murderer of Victim)
+  #!(Victim is alive)
+  (Detective accuses Suspect of murder)
+  !(Suspect denies that he is the murderer)
 effects:
-  (Suspect denies that he is the murderer of Victim)
-#responses:
-  #A way to return to the start of the investigation
-
-
+  (Suspect denies that he is the murderer)
+  !(Detective suspects that Suspect is the murderer)
 

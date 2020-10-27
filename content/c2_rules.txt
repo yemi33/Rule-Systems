@@ -2,7 +2,7 @@
 $Talk
 
 "{Initiator} talks to {Recipient} about {Action}"
-prob:0.3
+#prob:0.7
 roles:
 	Initiator:Character
 	Recipient:Character
@@ -494,12 +494,12 @@ roles:
   Murderer:Character
   Victim:Victim
   Location:Location
-  Destination:Location
+  #Destination:Location
   Action:Action
 preconditions:
   (Detective is a detective)
   (Detective is at the Location)
-  !(Detective is at the Destination)
+  #!(Detective is at the Destination)
   (Witness is at the Location)
   (Witness is alive)
   (Murderer is the culprit)
@@ -511,7 +511,7 @@ effects:
   (Detective knows about Murderer moving the Evidence)
   (This is a conversation)
 responses:
-  Suspect(Detective=Detective,Evidence=Evidence,Suspect=Murderer,Origin=Location,Location=Destination,Action=Action,Victim=Victim)
+  Suspect(Detective=Detective,Evidence=Evidence,Suspect=Murderer,Action=Action,Victim=Victim)
 
 $Interview
 "Detective {Detective} learns about {Action} from {Interviewee}"
@@ -522,13 +522,13 @@ roles:
   Interviewee:Character
   Suspect:Character
   Location:Location
-  Destination:Location
+  #Destination:Location
   Victim:Character
 preconditions:
   (Detective is a detective)
   (Interviewee is alive)
   (Detective is at the Location)
-  !(Detective is at the Destination)
+  #!(Detective is at the Destination)
   (Interviewee is at the Location)
   (Action is a motive)
   (Detective knows Evidence is the murder weapon)
@@ -540,7 +540,7 @@ effects:
   (Detective learns about Action which is related to Suspect and could be a motive)
   (This is a conversation)
 responses:
-  Suspect(Detective=Detective,Evidence=Evidence,Suspect=Suspect,Origin=Location,Location=Destination,Action=Action,Victim=Victim)
+  Suspect(Detective=Detective,Evidence=Evidence,Suspect=Suspect,Action=Action,Victim=Victim)
 
 $Suspect
 "Detective {Detective} suspects that {Suspect} murdered {Victim} with {Evidence}"
@@ -549,15 +549,16 @@ roles:
   Evidence:Prop
   Suspect:Character
   Victim:Character
-  Origin:Origin
-  Location:Location
+  #Origin:Origin
+  #Location:Location
   Action:Action
 preconditions:
   (Detective is a detective)
   !(Victim is alive)
-  (Detective is at the Origin)
-  !(Detective is at the Location)
-  (Detective knows Evidence is the murder weapon)(Detective knows about Suspect moving the Evidence)/(Detective learns about Action which is related to Suspect and could be a motive)
+  #(Detective is at the Origin)
+  #!(Detective is at the Location)
+  (Detective knows Evidence is the murder weapon)
+  (Detective knows about Suspect moving the Evidence)/(Detective learns about Action which is related to Suspect and could be a motive)
   !(Detective suspects that Suspect murdered Victim with Evidence)
 effects:
   (Detective suspects that Suspect murdered Victim with Evidence)
@@ -578,11 +579,10 @@ preconditions:
   (Detective is a detective)
   (Suspect is alive)
   !(Victim is alive)
-  (Detective suspects that Suspect murdered Victim with Evidence)
+  (Detective suspects that Suspect murdered Victim with Evidence) / (Detective learns about Action which is related to Suspect and could be motive)
   (Detective is at the Origin)
   (Suspect is at the Location)
   !(Detective is at the Location)
-  (Detective learns about Action which is related to Suspect and could be motive)
 effects:
   (Detective is at the Location)
   !(Detective is at the Origin)
@@ -611,6 +611,7 @@ effects:
   (Detective accuses Suspect of killing Victim with Evidence)
 responses:
   Confess(Suspect=Suspect,Detective=Detective,Evidence=Evidence,Victim=Victim)
+  FalseAccusation(Suspect=Suspect,Detective=Detective,Evidence=Evidence,Victim=Victim)
 
 $Confess
 "{Suspect} confesses that he is the murderer of {Victim}"
@@ -627,4 +628,24 @@ preconditions:
   !(Suspect confesses that he is the murderer of Victim)
 effects:
   (Suspect confesses that he is the murderer of Victim)
+
+$FalseAccusation
+"{Suspect} denies that he is the murderer of {Victim}"
+roles:
+  Suspect:Character 
+  Detective:Character
+  Evidence:Prop
+  Victim:Character
+preconditions:
+  (Detective is a detective)
+  !(Suspect is the culprit)
+  !(Victim is alive)
+  (Detective accuses Suspect of killing Victim with Evidence)
+  !(Suspect denies that he is the murderer of Victim)
+effects:
+  (Suspect denies that he is the murderer of Victim)
+#responses:
+  #A way to return to the start of the investigation
+
+
 

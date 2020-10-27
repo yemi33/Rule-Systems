@@ -16,7 +16,7 @@ def component2():
     # the culmination of your plot. This doesn't have to be called
     # Denouement, to be clear.
     while not engine.produced_action(action_name='Confess'):
-        engine.execute(n=1)
+        engine.execute(n=30)
 
 
 def grade():

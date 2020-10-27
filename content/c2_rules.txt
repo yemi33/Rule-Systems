@@ -59,6 +59,7 @@ roles:
   CM:Character
   LB:Character
   Action:Action
+  3rdPerson:Character
 preconditions:
   (*:Character is alive)
   (Action is scandalous)
@@ -72,7 +73,8 @@ effects:
   (This is a motive)
   (WB knows about Action)
   (Witness tells WB about Action)
-  (This is a conversation)
+  (*:Character knows about This)
+  #(This is a conversation)
 
 $AsksForPromotion 
 "{Initiator} talks to {Recipient} about a promotion"
@@ -398,6 +400,7 @@ effects:
   (murder has happened)
 	(*:Character knows about This)
 
+
 $MoveEvidence
 "The murderer moves the evidence to {Destination}"
 roles:
@@ -414,6 +417,7 @@ preconditions:
   (*:Character is alive)
   (*:Character is at the Origin)
   (Murderer is the culprit)
+  (Witness is at the Destination)
   !(Murderer is at the Destination)
   !(Murderer moves the Evidence)
 effects:
@@ -448,6 +452,7 @@ roles:
   Discoverer:Character
   Location:Location
   Evidence:Prop
+  Detective:Character
 preconditions:
   (Discoverer is at the Location)
   (Evidence is at the Location)
@@ -457,6 +462,7 @@ preconditions:
   (Discoverer is alive)
   !(Evidence is discovered by Discoverer)
   !(Evidence is discovered)
+  !(Detective knows Evidence is the murder weapon)
 effects:
   (Discoverer knows about This)
   (Evidence is discovered by Discoverer)
@@ -476,11 +482,12 @@ preconditions:
   (Detective is at the Location)
   (Discoverer is at the Location)
   (Discoverer is alive)
+  !(Discoverer is the culprit)
   (Action is a discovery of evidence)
   (Discoverer knows about Action)
   (Evidence is at the Location)
   (Evidence is used to murder)
-  #(Evidence is discovered by Discoverer)
+  (Evidence is discovered by Discoverer)
   !(Detective knows Evidence is the murder weapon)
 effects:
   (Detective knows Evidence is the murder weapon)
@@ -630,10 +637,10 @@ preconditions:
   !(Suspect confesses that he is the murderer)
 effects:
   (Suspect confesses that he is the murderer)
-  !(Detective suspects that Suspect is the murderer)
+  (Detective suspects that Suspect is the murderer)
 
 $FalseAccusation
-"{Suspect} denies that he is the murderer"
+"{Suspect} denies that he is the murderer and gives an alibi"
 roles:
   Suspect:Character 
   Detective:Character
@@ -647,5 +654,5 @@ preconditions:
   !(Suspect denies that he is the murderer)
 effects:
   (Suspect denies that he is the murderer)
-  !(Detective suspects that Suspect is the murderer)
+  (Detective suspects that Suspect is the murderer)
 

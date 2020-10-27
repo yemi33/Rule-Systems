@@ -391,7 +391,7 @@ effects:
   !(Murderer is jealous)
   (murder has happened)
 	(*:Character knows about This)
-  
+
 $MoveEvidence
 "The murderer moves the evidence to {Destination}"
 #prob:0.2

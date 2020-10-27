@@ -1,0 +1,109 @@
+<BEGIN ENTITIES>
+
+Momkey:Monkey
+Dadkey:Monkey
+Siskey:Monkey
+Brokey:Monkey
+Mekey:Monkey
+Hankey:Monkey
+Unckey:Monkey
+banana1:Prop
+banana2:Prop
+banana3:Prop
+nut:Prop
+seed:Prop
+stone:Prop
+stick:Prop
+flower:Prop
+leaf:Prop
+pot:Prop
+ball:Prop
+tree:Climbable
+canopy:Climbable
+rainforest:Location
+treehouse:Location
+school:Location
+
+	<END ENTITIES>
+
+	<BEGIN FACTS>
+<banana1> is edible
+<banana2> is edible
+<banana3> is edible
+<nut> is edible
+<seed> is edible
+<stone> is at the <rainforest>
+<stick> is at the <treehouse>
+<flower> is at the <rainforest>
+<leaf> is at the <rainforest>
+<pot> is at the <treehouse>
+<ball> is at the <school>
+<Momkey> is at the <treehouse>
+<Dadkey> is at the <rainforest>
+<Unckey> is at the <rainforest>
+<Siskey> is at the <school>
+<Brokey> is at the <school>
+<banana1> is at the <treehouse>
+<banana2> is at the <school>
+<banana3> is at the <rainforest>
+<Mekey> is at the <school>
+<Hankey> is at the <school>
+<Momkey> knows <Dadkey>
+<Momkey> knows <Unckey>
+<Momkey> knows <Siskey>
+<Momkey> knows <Brokey>
+<Momkey> knows <Mekey>
+<Dadkey> knows <Momkey>
+<Dadkey> knows <Unckey>
+<Dadkey> knows <Siskey>
+<Dadkey> knows <Brokey>
+<Dadkey> knows <Mekey>
+<Unckey> knows <Momkey>
+<Unckey> knows <Dadkey>
+<Unckey> knows <Siskey>
+<Unckey> knows <Brokey>
+<Unckey> knows <Mekey>
+<Siskey> knows <Dadkey>
+<Siskey> knows <Momkey>
+<Siskey> knows <Unckey>
+<Siskey> knows <Brokey>
+<Siskey> knows <Mekey>
+<Siskey> knows <Hankey>
+<Brokey> knows <Momkey>
+<Brokey> knows <Dadkey>
+<Brokey> knows <Unckey>
+<Brokey> knows <Siskey>
+<Brokey> knows <Mekey>
+<Brokey> knows <Hankey>
+<Mekey> knows <Momkey>
+<Mekey> knows <Dadkey>
+<Mekey> knows <Unckey>
+<Mekey> knows <Siskey>
+<Mekey> knows <Brokey>
+<Mekey> knows <Hankey>
+<Siskey> likes <Hankey>
+<Brokey> is friends with <Hankey>
+<Siskey> is loving
+<Brokey> is outgoing
+<Mekey> is friendly
+<Mekey> is hungry
+<Brokey> is hungry
+<Siskey> is hungry
+<Momkey> is hungry
+<Dadkey> is hungry
+<Hankey> is hungry
+<Brokey> is healthy
+<Siskey> is healthy
+<Momkey> is healthy
+<Dadkey> is healthy
+<Unckey> is healthy
+<Mekey> is healthy
+<Hankey> is healthy
+<Mekey> is on the ground
+<Brokey> is on the ground
+<Siskey> is on the ground
+<Momkey> is on the ground
+<Dadkey> is on the ground
+<Unckey> is on the ground
+<Hankey> is on the ground
+	<END FACTS>

@@ -1,0 +1,245 @@
+$Talk
+"{Initiator} talks to {Recipient}"
+roles:
+	Initiator:Monkey
+	Recipient:Monkey
+	Location:Location
+  ?Climbable:Climbable
+	?Witness:Monkey
+preconditions:
+	(*:Monkey is at Location)
+  (Initiator knows Recipient)
+	(*:Monkey is on the ground) / (*:Monkey is on the Climbable)
+effects:
+	(Initiator talks to Recipient)
+	(Recipient talks to Initiator)
+	(*:Character knows about This)
+
+$Move
+"{Initiator} moves from the {Origin} to the {Destination}"
+roles:
+  Initiator:Monkey
+  Origin:Location
+  Destination:Location
+preconditions:
+  (Initiator is at the Origin)
+  !(Initiator is at the Destination)
+  (Initiator is on the ground)
+  (Initiator is healthy)
+  !(Initiator has moved from the Origin)
+effects:
+  (Initiator is at the Destination)
+  !(Initiator is at the Origin)
+  (Initiator has moved from the Origin)
+
+$Eat
+"{Initiator} eats {Item}"
+roles:
+  Initiator:Monkey
+  Item:Prop
+  Location:Location
+preconditions:
+  (Initiator is at the Location)
+  (Item is at the Location)
+  (Initiator is hungry)
+  (Initiator has the Item)
+  (Item is edible)
+  !(Item is eaten)
+  !(Item is hidden)
+effects:
+  !(Initiator is hungry)
+  !(Item is at the Location)
+  (Item is eaten)
+
+$Climb
+"{Initiator} climbs a {Climbable}"
+roles:
+  Initiator:Monkey
+  Climbable:Climbable
+preconditions:
+  (Initiator is healthy)
+  (Initiator is on the ground)
+  !(Initiator \'s hands are full)
+  !(Initiator is on the Climbable)
+effects:
+  (Initiator is on the Climbable)
+  !(Initiator is on the ground)
+
+$PickUp
+"{Initiator} picks up the {Item}"
+roles:
+  Initiator:Monkey
+  Item:Prop
+  Location:Location
+  Climbable:Climbable
+preconditions:
+  (Initiator is healthy)
+  (Initiator is at the Location)
+  (Initiator is on the ground)
+  !(Initiator is on the Climbable)
+  (Item is at the Location)
+  !(Item is hidden)
+  !(Item is taken) / (Item is dropped) / (Item is eaten)
+  !(Initiator \'s hands are full)
+  !(Initiator has the Item)
+effects:
+  (Initiator has the Item)
+  (Item is taken)
+  !(Item is dropped)
+  (Initiator \'s hands are full)
+
+$Drop
+"{Initiator} drops the {Item}"
+roles:
+  Initiator:Monkey
+  Item:Prop
+  Location:Location
+preconditions:
+  (Initiator \'s hands are full)
+  (Initiator has the Item)
+  (Initiator is at the Location)
+  !(Item is dropped)
+  !(Item is eaten)
+  (Item is taken)
+effects:
+  !(Initiator \'s hands are full)
+  !(Initiator has the Item)
+  (Item is at the Location)
+  (Item is dropped)
+  !(Item is taken)
+
+$Throw
+"{Initiator} throws the {Item} at {Recipient}"
+roles:
+  Initiator:Monkey
+  Recipient:Monkey
+  Item:Prop
+  Location:Location
+preconditions:
+  (Initiator is at the Location)
+  (Recipient is at the Location)
+  (Initiator is healthy)
+  (Recipient is healthy)
+  (Initiator has the Item)
+  !(Item is eaten)
+  !(Item is dropped)
+  !(Item is thrown from Initiator to Recipient)
+effects:
+  !(Initiator \'s hands are full)
+  !(Initiator has the Item)
+  !(Item is taken)
+  (Item is dropped)
+  (Item is thrown from Initiator to Recipient)
+responses:
+  SuccessfulPass(Initiator=Initiator, Recipient=Recipient,Item=Item,Location=Location)
+  FailedPass(Initiator=Initiator, Recipient=Recipient,Item=Item,Location=Location)
+
+
+$SuccessfulPass
+"{Recipient} successfully receives the {Item} thrown by {Initiator}"
+roles:
+  Initiator:Monkey
+  Recipient:Monkey
+  Item:Prop
+  Location:Location
+preconditions:
+  (Item is thrown from Initiator to Recipient)
+  !(Recipient \'s hands are full)
+  !(Recipient successfully receives the Item)
+effects:
+  (Recipient has the Item)
+  !(Item is thrown from Initiator to Recipient)
+  (Recipient successfully receives the Item)
+  (Recipient \'s hands are full)
+  !(Initiator \'s hands are full)
+  !(Initiator has the Item)
+  (Item is taken)
+
+$FailedPass
+"{Recipient} fails to receive the {Item} thrown by {Initiator} -- {Recipient} gets hurt"
+roles:
+  Initiator:Monkey
+  Recipient:Monkey
+  Item:Prop
+  Location:Location
+preconditions:
+  (Item is thrown from Initiator to Recipient)
+  !(Recipient successfully receives the Item)
+  !(Recipient fails to receive the Item)
+effects:
+  (Item is dropped)
+  (Item is at the Location)
+  !(Recipient is healthy)
+  !(Item is thrown from Initiator to Recipient)
+  (Recipient fails to receive the Item)
+  !(Initiator \'s hands are full)
+  !(Initiator has the Item)
+  !(Item is taken)
+
+$Hide
+"{Initiator} hides the {Item}"
+prob:0.1
+roles:
+  Initiator:Monkey
+  Item:Prop
+  Location:Location
+  ?Witness:Monkey
+preconditions:
+  (*:Monkey is at the Location)
+  (Item is at the Location)
+  (Initiator is healthy)
+  !(Initiator \'s hands are full)
+  !(Item is hidden)
+effects:
+  (Item is hidden)
+  (Initiator hides the Item)
+
+$Discover
+"{Initiator} discovers the {Item}"
+roles:
+  Initiator:Monkey
+  Item:Prop
+  Location:Location
+preconditions:
+  (Initiator is at the Location)
+  (Initiator is healthy)
+  !(Initiator hides the Item)
+  (Item is at the Location)
+  (Item is hidden)
+effects:
+  !(Item is hidden)
+  (Initiator has the Item)
+  (Initiator \'s hands are full)
+
+$Heal 
+"{Initiator} is healed"
+roles:
+  Initiator:Monkey
+preconditions:
+  !(Initiator is healthy)
+  !(Initiator is healed)
+effects:
+  (Initiator is healthy)
+  (Initiator is healed)
+  
+$Trade
+"{Participant1} trades {Item1} with {Participant2}"
+roles:
+  Participant1:Monkey
+  Participant2:Monkey
+  Location:Location
+  Item1:Prop
+preconditions:
+  (Participant1 is at the Location)
+  (Participant2 is at the Location)
+  (Participant1 has the Item1)
+  (Participant1 \'s hands are full)
+  !(Participant2 \'s hands are full)
+  (Participant1 is healthy)
+  (Participant2 is healthy)
+effects:
+  !(Participant1 has the Item1)
+  !(Participant1 \'s hands are full)
+  (Participant2 has the Item1)
+  (Participant2 \'s hands are full)
+

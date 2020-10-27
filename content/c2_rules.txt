@@ -2,7 +2,7 @@
 $Talk
 
 "{Initiator} talks to {Recipient} about {Action}"
-prob:0.1
+prob:0.3
 roles:
 	Initiator:Character
 	Recipient:Character
@@ -20,8 +20,9 @@ preconditions:
   !(Initiator talks to Recipient about Action)
   !(Action is a movement)
   !(Action is a conversation)
+  !(Action is boring)
 effects:
-	(Recipient knows about Action)
+	(*:Character knows about Action)
   (Initiator talks to Recipient about Action)
   (This is a conversation)
 
@@ -92,10 +93,10 @@ preconditions:
 effects:
 	(*:Character knows about This)
   (Initiator asks Recipient about a promotion)
+  (This is boring)
 responses:
   NoPromotion(Initiator=Initiator, Recipient=Recipient, Location=Location,Witness=Witness)
   YesPromotion(Initiator=Initiator, Recipient=Recipient, Location=Location)
-
 
 $NoPromotion
 "{Recipient} doesn\'t give {Initiator} a promotion"
@@ -138,6 +139,7 @@ preconditions:
 effects:
   (Initiator receives a promotion)
   (*:Character knows about This)
+  (This is boring)
 
 
 $AsksForLand
@@ -159,6 +161,7 @@ effects:
 	(Initiator talks to Recipient about giving back the land)
 	(Recipient talks to Initiator about giving back the land)
 	(*:Character knows about This)
+  (This is boring)
 responses:
   NoLand(Initiator=Initiator, Recipient=Recipient, Location=Location,Witness=Witness)
   YesLand(Initiator=Initiator, Recipient=Recipient, Location=Location)
@@ -205,6 +208,7 @@ preconditions:
 effects:
   (Initiator receives the land)
   (*:Character knows about This)
+  (This is boring)
 
 
 $AsksForCompensation
@@ -226,6 +230,7 @@ effects:
 	(Initiator talks to Recipient about giving compensation for the lost farm)
 	(Recipient talks to Initiator about giving compensation for the lost farm)
 	(*:Character knows about This)
+  (This is boring)
 responses:
   NoCompensation(Initiator=Initiator, Recipient=Recipient, Location=Location, Witness=Witness)
   YesCompensation(Initiator=Initiator, Recipient=Recipient, Location=Location)
@@ -272,6 +277,7 @@ preconditions:
 effects:
   (Initiator receives the compensation)
   (*:Character knows about This)
+  (This is boring)
 
 $Flirt
 "{Initiator} flirts with {Recipient}"
@@ -394,7 +400,6 @@ effects:
 
 $MoveEvidence
 "The murderer moves the evidence to {Destination}"
-#prob:0.2
 roles:
   Murderer:Character
   Evidence:Prop
@@ -420,28 +425,10 @@ effects:
   (Witness knows about This)
   (Witness saw Murderer with the Evidence)
   (This is suspicious)
-  
 
-$Discover
-"{Discoverer} finds {Evidence} at {Location}"
-roles:
-  Discoverer:Character
-  Location:Location
-  Evidence:Prop
-preconditions:
-  (Discoverer is at the Location)
-  (Evidence is at the Location)
-  (Evidence is used to murder) / (Evidence is the deceased)
-  !(Discoverer is the culprit)
-  (Discoverer is alive)
-  !(Evidence is discovered)
-effects:
-  (Discoverer knows about This)
-  (Evidence is discovered by Discoverer)
-  (This is a discovery of evidence)
-  
 $Move
 "{Initiator} moves to {Destination}"
+prob:0.5
 roles:
   Initiator:Character
   Origin:Location
@@ -455,8 +442,29 @@ effects:
   (Initiator is at the Destination)
   (This is a movement)
 
+$Discover
+"{Discoverer} finds {Evidence} at {Location}"
+roles:
+  Discoverer:Character
+  Location:Location
+  Evidence:Prop
+preconditions:
+  (Discoverer is at the Location)
+  (Evidence is at the Location)
+  (Evidence is used to murder) / (Evidence is the deceased)
+  !(Discoverer is the culprit)
+  !(Discoverer is a detective)
+  (Discoverer is alive)
+  !(Evidence is discovered by Discoverer)
+  !(Evidence is discovered)
+effects:
+  (Discoverer knows about This)
+  (Evidence is discovered by Discoverer)
+  (This is a discovery of evidence)
+  (Evidence is discovered)
+
 $DetectEvidence 
-"Detective {Detective} gets a hold of {Evidence} from {Discoverer}."
+"Detective {Detective} gets a hold of {Evidence} from {Discoverer}"
 roles:
   Detective:Character
   Discoverer:Character
@@ -472,7 +480,7 @@ preconditions:
   (Discoverer knows about Action)
   (Evidence is at the Location)
   (Evidence is used to murder)
-  (Evidence is discovered by Discoverer)
+  #(Evidence is discovered by Discoverer)
   !(Detective knows Evidence is the murder weapon)
 effects:
   (Detective knows Evidence is the murder weapon)
@@ -484,40 +492,55 @@ roles:
   Evidence:Prop
   Witness:Character
   Murderer:Character
+  Victim:Victim
   Location:Location
+  Destination:Location
+  Action:Action
 preconditions:
   (Detective is a detective)
   (Detective is at the Location)
+  !(Detective is at the Destination)
   (Witness is at the Location)
   (Witness is alive)
   (Murderer is the culprit)
   (Detective knows Evidence is the murder weapon)
-  (Witness saw Murderer with the Evidence)
+  (Witness saw Murderer with the Evidence)/(Detective learns about Action which is related to Murderer and could be a motive)
   !(Detective knows about Murderer moving the Evidence)
+  !(Victim is alive)
 effects:
   (Detective knows about Murderer moving the Evidence)
   (This is a conversation)
+responses:
+  Suspect(Detective=Detective,Evidence=Evidence,Suspect=Murderer,Origin=Location,Location=Destination,Action=Action,Victim=Victim)
 
 $Interview
 "Detective {Detective} learns about {Action} from {Interviewee}"
 roles:
   Detective:Character
   Action:Action
+  Evidence:Prop
   Interviewee:Character
   Suspect:Character
   Location:Location
+  Destination:Location
+  Victim:Character
 preconditions:
   (Detective is a detective)
   (Interviewee is alive)
   (Detective is at the Location)
+  !(Detective is at the Destination)
   (Interviewee is at the Location)
   (Action is a motive)
+  (Detective knows Evidence is the murder weapon)
   (Interviewee knows about Action)
   (Suspect is related to Action)
   !(Detective learns about Action which is related to Suspect and could be a motive)
+  !(Victim is alive)
 effects:
   (Detective learns about Action which is related to Suspect and could be a motive)
   (This is a conversation)
+responses:
+  Suspect(Detective=Detective,Evidence=Evidence,Suspect=Suspect,Origin=Location,Location=Destination,Action=Action,Victim=Victim)
 
 $Suspect
 "Detective {Detective} suspects that {Suspect} murdered {Victim} with {Evidence}"
@@ -538,8 +561,8 @@ preconditions:
   !(Detective suspects that Suspect murdered Victim with Evidence)
 effects:
   (Detective suspects that Suspect murdered Victim with Evidence)
-responses:
-  Pursue(Detective=Detective,Suspect=Suspect,Victim=Victim,Evidence=Evidence,Origin=Origin,Location=Location,Action=Action)
+#responses:
+  #Pursue(Detective=Detective,Suspect=Suspect,Victim=Victim,Evidence=Evidence,Origin=Origin,Location=Location,Action=Action)
 
 $Pursue
 "Detective {Detective} pursues {Suspect}"
